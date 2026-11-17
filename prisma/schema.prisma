@@ -1,0 +1,219 @@
+// Sistem Laporan Disiplin Pelajar - Madrasah Tahfiz Al Furqan
+// PRD v1.2 - Fasa 1 (Prototaip dengan pangkalan data dummy SQLite)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model SchoolInfo {
+  id        String   @id @default("singleton")
+  name      String
+  nameArabic String?
+  logo      String?
+  vision    String
+  mission   String
+  address   String?
+  phone     String?
+  email     String?
+  hemPhone  String?
+  hemEmail  String?
+  updatedAt DateTime @updatedAt
+}
+
+model ClassRoom {
+  id               String   @id
+  name             String
+  year             Int
+  homeroomTeacherId String?
+  createdAt        DateTime @default(now())
+
+  students   Student[]
+  teacher    Teacher? @relation("ClassHomeroom", fields: [homeroomTeacherId], references: [id])
+}
+
+model Teacher {
+  id        String   @id
+  name      String
+  role      String   // guruKelas / warden / guruBertugas
+  phone     String?
+  createdAt DateTime @default(now())
+
+  homeroomOfClass ClassRoom[] @relation("ClassHomeroom")
+  attendanceRecords Attendance[]
+  meritRecords     MeritRecord[]
+  assessments      CharacterAssessment[]
+  dutyReports      DutyReport[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String   // dummy hash for prototaip
+  role         String   // superadmin / guruKananHEM / pengetua / guru / guruBertugas
+  teacherId    String?
+  name         String
+  createdAt    DateTime @default(now())
+
+  auditLogs AuditLog[]
+}
+
+model Student {
+  id               String   @id
+  name             String
+  ic               String   // 12 digit tanpa sempang
+  classId          String
+  gender           String   // L / P
+  year             Int
+  guardianName     String
+  guardianPhone    String
+  photo            String?
+  photoConsent     Boolean  @default(false)
+  photoConsentDate DateTime?
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+
+  class       ClassRoom?           @relation(fields: [classId], references: [id])
+  attendance  Attendance[]
+  assessments CharacterAssessment[]
+  meritRecords MeritRecord[]
+  programParticipants ProgramParticipant[]
+}
+
+model Attendance {
+  id         String   @id @default(cuid())
+  studentId  String
+  date       String   // YYYY-MM-DD
+  status     String   // HADIR / LEWAT / TH_BERSEBAB / TH_TANPA_SEBAB / CUTI
+  timeIn     String?
+  note       String?
+  recordedBy String?
+  createdAt  DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+  teacher Teacher? @relation(fields: [recordedBy], references: [id])
+
+  @@unique([studentId, date])
+}
+
+model CharacterAssessment {
+  id          String   @id @default(cuid())
+  studentId   String
+  period      String   // 2026-09 / 2026-S2
+  akhlak      Int
+  ibadah      Int
+  tanggungjawab Int
+  kebersihan  Int
+  kerjasama  Int
+  average     Float
+  grade       String   // CEMERLANG / BAIK / MEMUASKAN / PERLU_BIMBINGAN
+  comment     String
+  assessedBy  String?
+  createdAt   DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+  teacher Teacher? @relation(fields: [assessedBy], references: [id])
+
+  @@unique([studentId, period])
+}
+
+model MeritCategory {
+  id        String   @id
+  code      String
+  name      String
+  type      String   // MERIT / DEMERIT
+  severity  String?  // RINGAN / SEDERHANA / BERAT (untuk demerit)
+  group     String?  // Tahfiz / Akhlak / Akademik ... (untuk merit)
+  points    Int      // lalai
+
+  records MeritRecord[]
+}
+
+model MeritRecord {
+  id             String   @id @default(cuid())
+  studentId      String
+  categoryId     String
+  date           String   // YYYY-MM-DD
+  points         Int      // +/- value as actually applied
+  severity       String?  // RINGAN / SEDERHANA / BERAT (if demerit, possibly overridden)
+  severityReason String?  // wajib jika tahap ditukar
+  note           String?
+  recordedBy     String?
+  voided         Boolean  @default(false)
+  voidReason     String?
+  voidedBy       String?
+  voidedAt       DateTime?
+  createdAt      DateTime @default(now())
+
+  student   Student        @relation(fields: [studentId], references: [id])
+  teacher   Teacher?       @relation(fields: [recordedBy], references: [id])
+  category  MeritCategory? @relation(fields: [categoryId], references: [id])
+}
+
+model DutyReport {
+  id                String   @id @default(cuid())
+  weekNo            Int
+  startDate         String   // YYYY-MM-DD
+  endDate           String
+  teacherId         String?
+  attendanceSummary String
+  disciplineSummary String
+  cleanliness       String
+  safety            String
+  positives         String   // disimpan sebagai JSON array string
+  improvements      String   // disimpan sebagai JSON array string
+  noticeToParents   String
+  status            String   // DRAF / MENUNGGU / DIKEMBALIKAN / DILULUSKAN / DITERBITKAN
+  approvedBy        String?
+  approvedAt        DateTime?
+  reviewNote        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  teacher Teacher? @relation(fields: [teacherId], references: [id])
+}
+
+model Program {
+  id          String   @id @default(cuid())
+  title       String
+  category    String   // TAHFIZ / SAHSIAH / SUKAN / KEMASYARAKATAN / LAWATAN
+  date        String   // YYYY-MM-DD
+  location    String
+  description String
+  objectives  String
+  outcome     String
+  coverImage  String?
+  gallery     String   // disimpan sebagai JSON array string
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  participants ProgramParticipant[]
+}
+
+model ProgramParticipant {
+  id        String   @id @default(cuid())
+  programId String
+  studentId String
+
+  program  Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+  student  Student @relation(fields: [studentId], references: [id])
+
+  @@unique([programId, studentId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  username  String?
+  action    String
+  entity    String
+  entityId  String?
+  detail    String
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}

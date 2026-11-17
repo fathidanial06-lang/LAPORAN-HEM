@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(296 0.5 0.5)">
+      <stop offset="0%" stop-color="#00B4CC"/>
+      <stop offset="100%" stop-color="#0E7C8F"/>
+    </linearGradient>
+    <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="2.5" fill="rgba(255,255,255,0.18)"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <rect width="800" height="600" fill="url(#dots)"/>
+  <circle cx="470" cy="380" r="92" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="420" cy="178" r="64" fill="rgba(255,255,255,0.10)"/>
+  <g transform="translate(60, 480)">
+    <rect width="220" height="6" fill="rgba(255,255,255,0.6)"/>
+    <text x="0" y="-12" font-family="Poppins, Inter, sans-serif" font-size="22" font-weight="700" fill="white">Pertandingan Hafazan</text>
+    <text x="0" y="34" font-family="Inter, sans-serif" font-size="14" fill="rgba(255,255,255,0.85)">MTAF - Gambar 8 / 12</text>
+  </g>
+  <text x="740" y="60" text-anchor="end" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="rgba(255,255,255,0.8)">MTAF</text>
+</svg>
