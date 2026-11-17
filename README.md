@@ -42,7 +42,7 @@ Portal web yang membolehkan ibu bapa/penjaga menyemak prestasi disiplin anak mer
 | Rangka kerja | Next.js 16 (App Router) |
 | Bahasa | TypeScript 5 |
 | Gaya | Tailwind CSS 4 + shadcn/ui |
-| Pangkalan data | Prisma ORM + SQLite |
+| Pangkalan data | Prisma ORM + PostgreSQL (Supabase) — SQLite fallback untuk prototaip |
 | Pengurusan keadaan | Zustand (client), TanStack Query (server) |
 | Carta | Recharts |
 | Borang | React Hook Form + Zod |
@@ -54,18 +54,37 @@ Portal web yang membolehkan ibu bapa/penjaga menyemak prestasi disiplin anak mer
 
 ### Keperluan
 - Node.js 18+ atau Bun
-- SQLite (terbina dalam Prisma)
+- **Pangkalan data**: Supabase (PostgreSQL) — disyorkan untuk pengeluaran. Lihat [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md) untuk panduan lengkap. SQLite juga disokong untuk prototaip pantas.
 
-### Pemasangan
+### Pemasangan (Supabase — disyorkan)
 
 ```bash
 # Pasang dependencies
 bun install
 
-# Push skema Prisma ke SQLite
+# Salin .env.example ke .env dan tetapkan DATABASE_URL Supabase anda
+cp .env.example .env
+# Edit .env: DATABASE_URL=postgresql://postgres:[PWD]@db.[REF].supabase.co:5432/postgres
+
+# Cipta skema dalam Supabase
 bun run db:push
 
+# Jana Prisma Client
+bun run db:generate
+
 # Isi pangkalan data dengan data dummy PRD
+bun run seed
+```
+
+> Jika port 5432 disekat di rangkaian anda, gunakan **Session pooler** (lihat `.env.example`) atau jalankan `prisma/migrations/0001_init.sql` terus di **Supabase SQL Editor**. Butiran penuh di [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md).
+
+### Pemasangan (SQLite — prototaip pantas)
+
+```bash
+bun install
+# Tukar provider dalam prisma/schema.prisma kepada "sqlite"
+# Tetapkan DATABASE_URL=file:./db/custom.db dalam .env
+bun run db:push
 bun run seed
 ```
 
