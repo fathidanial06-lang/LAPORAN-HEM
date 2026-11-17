@@ -57,18 +57,18 @@ export function Header() {
           aria-label="Laman Utama"
         >
           <Image
-            src="/logo-mtaf.svg"
+            src="/logo-mtaf.png"
             alt="Logo Madrasah Tahfiz Al Furqan"
-            width={44}
-            height={44}
-            className="shrink-0"
+            width={54}
+            height={36}
+            className="shrink-0 object-contain"
           />
           <div className="hidden sm:block text-left leading-tight">
             <div className="text-sm font-bold text-primary">
               Madrasah Tahfiz Al Furqan
             </div>
             <div className="text-xs text-muted-foreground">
-              Sistem Laporan Disiplin Pelajar
+              Laporan UNIT HEM
             </div>
           </div>
         </button>

@@ -15,19 +15,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sistem Laporan Disiplin Pelajar | Madrasah Tahfiz Al Furqan",
+  title: "Laporan UNIT HEM | Madrasah Tahfiz Al Furqan",
   description:
-    "Sistem Laporan Disiplin Pelajar Madrasah Tahfiz Al Furqan - pantau kedatangan, sahsiah, merit/demerit dan program anak anda.",
+    "Laporan UNIT HEM Madrasah Tahfiz Al Furqan - pantau kedatangan, sahsiah, merit/demerit dan program anak anda.",
   keywords: [
     "Madrasah Tahfiz Al Furqan",
     "MTAF",
-    "disiplin pelajar",
+    "UNIT HEM",
+    "laporan disiplin",
     "HEM",
     "laporan",
   ],
   authors: [{ name: "UNIT HEM MTAF" }],
   icons: {
-    icon: "/logo-mtaf.svg",
+    icon: "/logo-mtaf.png",
   },
 };
 

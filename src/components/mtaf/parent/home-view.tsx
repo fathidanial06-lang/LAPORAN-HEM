@@ -123,11 +123,11 @@ export function HomeView() {
           <div className="flex h-full flex-col">
             <div className="flex flex-col items-center text-center">
               <Image
-                src="/logo-mtaf.svg"
+                src="/logo-mtaf.png"
                 alt="Logo Madrasah Tahfiz Al Furqan"
-                width={96}
-                height={96}
-                className="mb-3"
+                width={120}
+                height={80}
+                className="mb-3 object-contain"
                 priority
               />
               <h1 className="text-xl font-extrabold sm:text-2xl">
@@ -139,7 +139,7 @@ export function HomeView() {
                 </p>
               )}
               <p className="mt-2 text-sm opacity-90">
-                Sistem Laporan Disiplin Pelajar
+                Laporan UNIT HEM
               </p>
             </div>
 
